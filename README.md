@@ -33,7 +33,7 @@ Clone/Fork the repo and get started.
 5. Once compiled run - `java -jar spring-app/build/libs/spring-react-0.0.1.jar` and you will have your app running on http://localhost:8080/.
 
 
-## Working on -
+## Working on --
 1. Dockerfile
 2. Adding other webpack plugins
 3. Making size of bundled file more smaller.
