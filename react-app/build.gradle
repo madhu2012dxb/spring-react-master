@@ -1,0 +1,53 @@
+buildscript {
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:1.3.1"
+
+    }
+}
+apply plugin: 'base'
+apply plugin: 'com.moowork.node'
+task start(type: Exec) {
+    inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file("webpack.config.js").withPathSensitivity(PathSensitivity.RELATIVE)
+    commandLine "C:/Users/madhu/Quality/spring-react-master/spring-react-master/react-app/node_modules/.bin/webpack-dev-server.cmd" +
+            "", '--mode', 'development', '--devtool', 'inline-source-map', '--hot'
+}
+
+node {
+    // Version of node to use.
+    version = '14.0.0'
+
+    // Enabled the automatic download.
+    download = true
+}
+
+task npm_install(type: Exec) {
+    commandLine "npm.cmd", 'install'
+    standardOutput = new FileOutputStream("./install.txt")
+}
+
+task test(type: Exec) {
+    commandLine "npm.cmd", 'test'
+    standardOutput = new FileOutputStream("./out.txt")
+}
+
+// webpack task
+task webpack(type: Exec) {
+    inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file("webpack.config.js").withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.cacheIf { true }
+    commandLine "C:/Users/madhu/Quality/spring-react-master/spring-react-master/react-app/node_modules/.bin/webpack-cli.cmd", '--mode', 'production'
+}
+
+clean {
+    delete 'dist'
+}
+
+//check.dependsOn(test)
+assemble.dependsOn(npm_install)
+assemble.dependsOn(webpack)
