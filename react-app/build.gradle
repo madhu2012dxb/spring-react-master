@@ -22,8 +22,8 @@ node {
     // Version of node to use.
     version = '14.0.0'
 
-    // Enabled the automatic download.
-    download = true
+    // Enabled the utomatic download.
+    download = false
 }
 
 task npm_install(type: Exec) {
@@ -31,9 +31,9 @@ task npm_install(type: Exec) {
     standardOutput = new FileOutputStream("./install.txt")
 }
 
-task test(type: Exec) {
-    commandLine "npm.cmd", 'test'
-    standardOutput = new FileOutputStream("./out.txt")
+
+task test_coverage(type: NpmTask,dependsOn: npm_install) {
+    args = ['run', 'test:coverage']
 }
 
 // webpack task
@@ -48,6 +48,6 @@ clean {
     delete 'dist'
 }
 
-//check.dependsOn(test)
+check.dependsOn(test_coverage)
 assemble.dependsOn(npm_install)
 assemble.dependsOn(webpack)

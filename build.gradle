@@ -1,3 +1,4 @@
+apply plugin: 'org.sonarqube'
 
 buildscript {
     ext {
@@ -16,8 +17,8 @@ buildscript {
     }
 }
 
-subprojects {
-   group = 'com.jaat.geeky'
+allprojects {
+    group = 'com.jaat.geeky'
     version = '0.0.1'
 
     repositories {
@@ -26,26 +27,104 @@ subprojects {
     }
 
     apply plugin: 'idea'
-    apply plugin: 'org.sonarqube'
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
 
     sonarqube {
         properties {
-            property "sonar.sources", "src/main/java"
+            property "sonar.sources", "src"
+            property "sonar.verbose", "true"
+            property "sonar.multipleSonarProfiles", "true"
             property "sonar.log.level", "TRACE"
             property "sonar.projectName", "spring-react"
             property "sonar.projectKey", "spring-react"
             property "sonar.login", "admin"
             property "sonar.password", "Mad@1234"
-            property "sonar.jacoco.reportPath", "spring-app/$buildDir/jacoco.xml"
+
         }
     }
 
-    project(":react-app") {
-        sonarqube {
-            properties {
-                property "sonar.sources", "src"
-                property 'sonar.javascript.inclusions', 'src/**'
-                property "sonar.log.level", "TRACE"
-            }
-        }}
+
 }
+
+subprojects {
+    sonarqube {
+        properties{
+
+        }
+    }
+
+    test{
+        finalizedBy jacocoTestReport
+        jacoco{
+            destinationFile=layout.buildDirectory.file('coverage-reports/jacoco-ut.exec').get().asFile
+        }
+
+    }
+
+    jacocoTestReport {
+        dependsOn test
+
+        reports{
+            xml {
+                enabled=true
+                destination file("$buildDir/reports/jacoco/jacoco-ut.xml")
+            }
+        }
+    }
+
+
+
+}
+
+sonarqube {
+    properties {
+        property "sonar.testExecutionReportPaths", "${project.rootDir}/react-app/reports/test-reporter.xml"
+    }
+}
+project(":react-app") {
+    sonarqube {
+        properties {
+            property "sonar.inclusions", "**/src/**/*.js"
+            property "sonar.exclusions", "**/src/**/*.jsx"
+            property "sonar.javascript.lcov.reportPaths", "coverage/lcov.info"
+        }
+    }}
+project(":spring-app") {
+    sonarqube {
+        properties {
+            property "sonar.language", "java"
+            property "sonar.inclusions", "**/src/main/java/**"
+            property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/jacoco-ut.xml"
+        }
+    }}
+
+def aggregateCoverageFile ="$buildDir/coverage-reports/jacoco-aggregate.exec"
+
+task jacocoMergeTestData(type:JacocoMerge){
+    destinationFile = file(aggregateCoverageFile)
+    executionData=files(subprojects.jacocoTestReport.executionData).filter {f->f.exists()}
+}
+
+task jacocoRootReport (type:JacocoReport){
+    dependsOn jacocoMergeTestData
+
+    getAdditionalSourceDirs().setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+    getSourceDirectories().setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+    getClassDirectories().setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+    getExecutionData().setFrom(files(subprojects.jacocoTestReport.executionData).filter {f -> f.exists()})
+
+    reports{
+        xml{
+            enabled= true
+            destination file("$buildDir/reports/jacoco-aggregate/jacoco-aggregate.xml")
+        }
+    }
+
+
+}
+
+assemble.dependsOn(subprojects.assemble)
+build.dependsOn(subprojects.build)
+build.finalizedBy(jacocoRootReport)

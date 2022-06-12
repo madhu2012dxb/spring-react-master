@@ -15,5 +15,8 @@
     "babel-plugin-transform-class-properties",
     "babel-plugin-transform-es2015-modules-commonjs",
     "babel-plugin-transform-async-to-generator"
+  ],
+  "test": [
+    "jest"
   ]
 }
