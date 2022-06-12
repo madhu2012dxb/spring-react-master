@@ -33,6 +33,7 @@ sonarqube {
         property "sonar.projectKey", "spring-react"
         property "sonar.login", "admin"
         property "sonar.password", "Mad@1234"
+        property "sonar.jacoco.reportPath", "spring-app/jacoco.xml"
     }
 }
 
@@ -64,6 +65,7 @@ dockerRun {
 jacocoTestReport {
     reports {
         xml.enabled true
+        xml.destination file("$buildDir/jacoco.xml")
     }
 }
 test.finalizedBy jacocoTestReport
