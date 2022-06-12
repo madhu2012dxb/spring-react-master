@@ -21,6 +21,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.palantir.docker"
 apply plugin: 'com.palantir.docker-run'
 apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
 
 
 sourceCompatibility = 1.8
@@ -59,5 +60,13 @@ dockerRun {
     ports '8080:8080'
     clean true
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+test.finalizedBy jacocoTestReport
+
 docker.dependsOn(project.tasks['bootJar'])
 bootJar.dependsOn(':react-app:assemble')
