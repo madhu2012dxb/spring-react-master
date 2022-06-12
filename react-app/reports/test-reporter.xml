@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testExecutions version="1">
-    <file path="C:\Users\madhu\Quality\spring-react-master\spring-react-master\react-app\src\tests\components\App.test.jsx">
-        <testCase name="renders without crashing" duration="14"/>
-    </file>
-</testExecutions>
