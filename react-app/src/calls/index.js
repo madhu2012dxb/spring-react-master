@@ -1,8 +1,7 @@
 export const checkSecurityFromServer = async () => {
     const response = await fetch(`/api/security`)
     const json = await response.json()
-    const security = await json.isSecure
-    return security
+    return await json.isSecure
 }
 
 export const loginInto = async (formData) => {

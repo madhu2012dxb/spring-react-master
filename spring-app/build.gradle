@@ -20,22 +20,12 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.palantir.docker"
 apply plugin: 'com.palantir.docker-run'
-apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-sonarqube {
-    properties {
-        property "sonar.projectName", "spring-react"
-        property "sonar.projectKey", "spring-react"
-        property "sonar.login", "admin"
-        property "sonar.password", "Mad@1234"
-        property "sonar.jacoco.reportPath", "spring-app/jacoco.xml"
-    }
-}
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
@@ -69,6 +59,8 @@ jacocoTestReport {
     }
 }
 test.finalizedBy jacocoTestReport
-
+tasks.named('sonarqube').configure {
+    dependsOn test
+}
 docker.dependsOn(project.tasks['bootJar'])
 bootJar.dependsOn(':react-app:assemble')

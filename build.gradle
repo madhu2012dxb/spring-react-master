@@ -1,10 +1,51 @@
-subprojects {
-    apply plugin: 'idea'
 
-    group = 'com.jaat.geeky'
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("com.palantir.docker:com.palantir.docker.gradle.plugin:0.22.1")
+        classpath("com.palantir.docker-run:com.palantir.docker-run.gradle.plugin:0.22.1")
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3'
+
+    }
+}
+
+subprojects {
+   group = 'com.jaat.geeky'
     version = '0.0.1'
 
     repositories {
         mavenCentral()
+        gradlePluginPortal()
     }
+
+    apply plugin: 'idea'
+    apply plugin: 'org.sonarqube'
+
+    sonarqube {
+        properties {
+            property "sonar.sources", "src/main/java"
+            property "sonar.log.level", "TRACE"
+            property "sonar.projectName", "spring-react"
+            property "sonar.projectKey", "spring-react"
+            property "sonar.login", "admin"
+            property "sonar.password", "Mad@1234"
+            property "sonar.jacoco.reportPath", "spring-app/$buildDir/jacoco.xml"
+        }
+    }
+
+    project(":react-app") {
+        sonarqube {
+            properties {
+                property "sonar.sources", "src"
+                property 'sonar.javascript.inclusions', 'src/**'
+                property "sonar.log.level", "TRACE"
+            }
+        }}
 }
