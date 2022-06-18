@@ -1,5 +1,12 @@
 #!/groovy
 
-node('master') {
-  echo "Hello world! I am node ${env.NODE_NAME}"
-}
+pipeline {
+             agent any
+             stages {
+             stage (“build”) {
+                          Steps {
+                                echo ‘building the application..’
+                                                  }
+                                      }
+             }
+             }
