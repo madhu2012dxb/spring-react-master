@@ -1,10 +1,8 @@
-#!/groovy
-
 pipeline {
              agent any
              stages {
-             stage ("build") {
-                          Steps {
+             stage('build') {
+                          steps {
                                 echo 'building the application..'
                                                   }
                                       }
