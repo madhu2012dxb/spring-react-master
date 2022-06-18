@@ -89,6 +89,9 @@ project(":react-app") {
             property "sonar.inclusions", "**/src/**/*.js"
             property "sonar.exclusions", "**/src/**/*.jsx"
             property "sonar.javascript.lcov.reportPaths", "coverage/lcov.info"
+            property "sonar.tests", "src"
+            property "sonar.test.inclusions", "**/src/tests/**"
+
         }
     }}
 project(":spring-app") {
@@ -128,3 +131,6 @@ task jacocoRootReport (type:JacocoReport){
 assemble.dependsOn(subprojects.assemble)
 build.dependsOn(subprojects.build)
 build.finalizedBy(jacocoRootReport)
+tasks.named('sonarqube').configure {
+    dependsOn build
+}

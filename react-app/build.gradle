@@ -11,13 +11,6 @@ buildscript {
 }
 apply plugin: 'base'
 apply plugin: 'com.moowork.node'
-task start(type: Exec) {
-    inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.file("webpack.config.js").withPathSensitivity(PathSensitivity.RELATIVE)
-    commandLine "C:/Users/madhu/Quality/spring-react-master/spring-react-master/react-app/node_modules/.bin/webpack-dev-server.cmd" +
-            "", '--mode', 'development', '--devtool', 'inline-source-map', '--hot'
-}
-
 node {
     // Version of node to use.
     version = '14.0.0'
@@ -26,22 +19,21 @@ node {
     download = false
 }
 
-task npm_install(type: Exec) {
-    commandLine "npm.cmd", 'install'
-    standardOutput = new FileOutputStream("./install.txt")
+task npm_install(type: NpmTask) {
+    args = ['install']
 }
 
 
 task test_coverage(type: NpmTask,dependsOn: npm_install) {
     args = ['run', 'test:coverage']
 }
+task npm_test(type: NpmTask,dependsOn: npm_install) {
+    args = ['run', 'test:coverage']
+}
 
 // webpack task
-task webpack(type: Exec) {
-    inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.file("webpack.config.js").withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.cacheIf { true }
-    commandLine "C:/Users/madhu/Quality/spring-react-master/spring-react-master/react-app/node_modules/.bin/webpack-cli.cmd", '--mode', 'production'
+task webpack(type: NpmTask,dependsOn: test_coverage) {
+    args = ['run', 'build:prod']
 }
 
 clean {

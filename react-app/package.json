@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "test": "cross-env NODE_ENV=test jest --coverage --no-cache --testResultsProcessor jest-sonar-reporter",
-    "test:coverage": "cross-env NODE_ENV=test jest --coverage --no-cache --testResultsProcessor jest-sonar-reporter"
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage --no-cache --testResultsProcessor jest-sonar-reporter",
+    "build:prod": "webpack --mode=production --env=prod"
   },
   "jest": {
     "moduleFileExtensions": [
