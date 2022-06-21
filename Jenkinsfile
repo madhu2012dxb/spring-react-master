@@ -30,7 +30,7 @@
     stage('start container') {
     steps {
     echo 'stop container 8080 port'
-    bat "FOR /f "tokens=*" %i IN ('docker ps -q') DO docker stop %i"
+    bat 'FOR /f "tokens=*" %i IN ('docker ps -q') DO docker stop %i'
     echo 'running the application..'
     bat './gradlew dockerRun'
     }
