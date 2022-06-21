@@ -29,7 +29,7 @@
 
     stage('start container') {
     steps {
-    echo 'running the application..'
+    echo 'running the application....'
     bat './gradlew dockerRun'
     }
     }
