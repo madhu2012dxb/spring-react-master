@@ -13,19 +13,26 @@ pipeline {
                                              bat './gradlew test'
                                                                }
                                                    }
-             stage('sonarqube') {
+             stage('publish to sonarqube') {
                                                     steps {
                                                           echo 'publishing results to sonarqube...'
                                                           bat './gradlew sonarqube'
                                                                             }
                                                                 }
 
-            stage('docker') {
+            stage('deploy to docker') {
                                                    steps {
                                                          echo 'deploying the application..'
                                                          bat './gradlew docker'
                                                                            }
                                                                }
+
+            stage('run on docker') {
+                                                               steps {
+                                                                     echo 'running the application..'
+                                                                     bat './gradlew dockerRun'
+                                                                                       }
+                                                                           }
 
              }
              }
