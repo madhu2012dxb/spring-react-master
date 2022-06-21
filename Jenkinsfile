@@ -29,8 +29,6 @@
 
     stage('start container') {
     steps {
-    echo 'stop container 8080 port'
-    bat 'stopContainer.bat'
     echo 'running the application..'
     bat './gradlew dockerRun'
     }
